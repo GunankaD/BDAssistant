@@ -6,6 +6,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import FloatingActionButton from '../components/FloatingActionButton';
 
+// 🧭 icons
+import { Server, History } from 'lucide-react-native';
+
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
@@ -17,17 +20,20 @@ export default function HomeScreen({ navigation }: Props) {
         <BoxCard
           title="Devices"
           subtitle="View all farm devices (online/offline, last seen)"
-          onPress={() => navigation.navigate('Devices' /* temp: we can make Devices screen later */)}
+          icon={Server}
+          onPress={() => navigation.navigate('Devices')}
           testID="devices-card"
         />
 
         <BoxCard
           title="History"
           subtitle="View all bird events (images, sound, time & location)"
+          icon={History}
           onPress={() => navigation.navigate('History')}
           testID="history-card"
         />
       </View>
+
       <FloatingActionButton onPress={() => { /* TODO: customer service */ }} />
     </SafeAreaView>
   );
