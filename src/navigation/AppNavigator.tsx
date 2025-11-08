@@ -22,6 +22,8 @@ export default function AppNavigator() {
       initialRouteName="Home"
       screenOptions={{
         headerShown: true,
+        headerStyle: { backgroundColor: '#1A434E' },
+        headerTintColor: '#FFFFFF',                  // text + back icon color
         contentStyle: { backgroundColor: '#fff' },
       }}
     >
@@ -29,7 +31,7 @@ export default function AppNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-            title: 'BD Assistant',
+            title: 'Bird Deterrent Assistant',
             headerRight: () => <HeaderProfileButton />,
         }}
         />
