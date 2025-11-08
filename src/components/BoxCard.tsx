@@ -21,13 +21,13 @@ export default function BoxCard({ title, subtitle, onPress, testID }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1A434E',
     borderRadius: 14,
     padding: 20,
     marginVertical: 10,
     // subtle shadow
     shadowColor: '#000',
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.2,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
@@ -39,11 +39,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#111827',
+    color: '#FFFFFF',
   },
   subtitle: {
     marginTop: 6,
     fontSize: 13,
-    color: '#6b7280',
+    color: '#B0BEC5',
   },
 });

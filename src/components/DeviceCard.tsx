@@ -26,20 +26,20 @@ export default function DeviceCard({ device }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1A434E',
     borderRadius: 12,
     padding: 12,
     marginVertical: 8,
     shadowColor: '#000',
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.2,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  name: { fontSize: 16, fontWeight: '700', color: '#0f172a' },
+  name: { fontSize: 16, fontWeight: '700', color: '#FFFFFF' },
   status: { fontSize: 12, fontWeight: '700', textTransform: 'capitalize' },
-  online: { color: '#16a34a' },
-  offline: { color: '#ef4444' },
-  line: { marginTop: 6, color: '#475569', fontSize: 13 },
+  online: { color: '#4ADE80' },
+  offline: { color: '#F87171' },
+  line: { marginTop: 6, color: '#B0BEC5', fontSize: 13 },
 });

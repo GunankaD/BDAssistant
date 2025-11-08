@@ -4,6 +4,7 @@ import { FlatList, View, StyleSheet, Text } from 'react-native';
 import DeviceCard from '../components/DeviceCard';
 import type { Device } from '../types';
 import { dummyDeviceData } from '../data/dummyDeviceData'
+import FloatingActionButton from '../components/FloatingActionButton'
 
 const DUMMY: Device[] = dummyDeviceData;
 
@@ -25,6 +26,7 @@ export default function DevicesScreen() {
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
         ListEmptyComponent={() => <Text style={styles.empty}>No devices found</Text>}
       />
+      <FloatingActionButton onPress={() => { /* TODO: customer service */ }} />
     </SafeAreaView>
   );
 }

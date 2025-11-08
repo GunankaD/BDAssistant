@@ -1,7 +1,61 @@
 import type { BirdEvent } from '../types';
 
 export const dummyBirdData: BirdEvent[] = [
-  { id: '1', species: 'Purple Swamphen', soundName: 'scare_crow.wav', timestamp: new Date().toISOString(), imageUrl: '', location: { lat: 12.95, lng: 77.57 } },
-  { id: '2', species: 'Purple Swamphen', soundName: 'scare_crow.wav', timestamp: new Date().toISOString(), imageUrl: '', location: { lat: 12.95, lng: 77.57 } },
-  // add real data when connected to Firestore
+    {
+    id: '1',
+    species: 'Purple Swamphen',
+    soundName: 'scare_crow.wav',
+    timestamp: new Date().toISOString(),
+    imageUrl: 'https://photos.smugmug.com/Birds-Water/Purple-Swamphen/i-jdQrxrX/3/Lt9dQnGGPkMHj2VT3tS8cBBdDHPNdGB5QFXT9jRWh/XL/Calamon-02-XL.jpg',
+    location: { lat: 12.95, lng: 77.57 },
+  },
+  {
+    id: '2',
+    species: 'House Sparrow',
+    soundName: 'chirp_short.wav',
+    timestamp: new Date().toISOString(),
+    imageUrl: 'https://www.allaboutbirds.org/guide/assets/photo/305874191-480px.jpg',
+    location: { lat: 12.96, lng: 77.60 },
+  },
+  {
+    id: '3',
+    species: 'Common Myna',
+    soundName: 'myna_alert.wav',
+    timestamp: new Date().toISOString(),
+    imageUrl: 'https://res.cloudinary.com/roundglass/image/upload/v1659695150/rg/collective/media/bengal-howrah-common-myna-abhishek-das_eozpud.jpg',
+    location: { lat: 12.97, lng: 77.59 },
+  },
+  {
+    id: '4',
+    species: 'Rose-ringed Parakeet',
+    soundName: 'parakeet_screech.wav',
+    timestamp: new Date().toISOString(),
+    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReM5QreKLX1UqgbDHEkiUy5odL0wzYt3mJmw&s',
+    location: { lat: 12.94, lng: 77.55 },
+  },
+  {
+    id: '5',
+    species: 'Red-wattled Lapwing',
+    soundName: 'lapwing_alarm.wav',
+    timestamp: new Date().toISOString(),
+    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4IzXeOpEp8JseK9g_2W4HTbUD_bSYpULTug&s',
+    location: { lat: 12.93, lng: 77.62 },
+  },
+    
+  {
+    id: '6',
+    species: 'Black Drongo',
+    soundName: 'drongo_shrill.wav',
+    timestamp: new Date().toISOString(),
+    imageUrl: 'https://cdn.download.ams.birds.cornell.edu/api/v1/asset/126548361/320',
+    location: { lat: 12.99, lng: 77.61 },
+  },
+  {
+    id: '7',
+    species: 'Indian Pond Heron',
+    soundName: 'pond_heron_call.wav',
+    timestamp: new Date().toISOString(),
+    imageUrl: 'https://i0.wp.com/singaporebirds.com/wp-content/uploads/2016/01/indian-pond-heron-fy7d2479-102eos7d-150418.jpg?fit=1200%2C800&ssl=1',
+    location: { lat: 12.91, lng: 77.58 },
+  },
 ];

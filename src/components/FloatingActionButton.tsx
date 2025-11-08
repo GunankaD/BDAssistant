@@ -26,10 +26,10 @@ export default function FloatingActionButton({ onPress, label = '💬' }: Props)
 const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
-    width: 72,
-    height: 72,
+    width: 64,
+    height: 64,
     borderRadius: 10,
-    backgroundColor: '#0ea5e9', // light blue
+    backgroundColor: '#0ea5e9',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -38,5 +38,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
   },
-  icon: { fontSize: 30, color: 'white' },
+  icon: { fontSize: 24, color: 'white' },
 });
