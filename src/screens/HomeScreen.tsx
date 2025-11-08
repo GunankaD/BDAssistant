@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import BoxCard from '../components/BoxCard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import FloatingActionButton from '../components/FloatingActionButton';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -27,6 +28,7 @@ export default function HomeScreen({ navigation }: Props) {
           testID="history-card"
         />
       </View>
+      <FloatingActionButton onPress={() => { /* TODO: customer service */ }} />
     </SafeAreaView>
   );
 }
