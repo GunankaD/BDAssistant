@@ -16,7 +16,7 @@ export default function HomeScreen({ navigation }: Props) {
         <BoxCard
           title="Devices"
           subtitle="View all farm devices (online/offline, last seen)"
-          onPress={() => navigation.navigate('History' /* temp: we can make Devices screen later */)}
+          onPress={() => navigation.navigate('Devices' /* temp: we can make Devices screen later */)}
           testID="devices-card"
         />
 
