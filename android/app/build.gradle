@@ -111,9 +111,18 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
+    // Firebase BoM — keeps versions compatible
+    implementation platform('com.google.firebase:firebase-bom:34.5.0')
+
+    // Firebase SDKs (no versions when using BoM)
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-storage'
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
 }
+apply plugin: 'com.google.gms.google-services'

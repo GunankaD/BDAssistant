@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599349875847",
+    "project_id": "bdapp-df984",
+    "storage_bucket": "bdapp-df984.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599349875847:android:6d9fa47409c10177475422",
+        "android_client_info": {
+          "package_name": "com.bdassistant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFMNk2GjgdAEmRZ-IgfVgQTDHwXEa6qQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
