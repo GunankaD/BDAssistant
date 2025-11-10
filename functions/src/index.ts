@@ -17,6 +17,8 @@ export const onBirdCreated = onDocumentCreated(
     const id = event.params.id;
 
     const data: Record<string, string> = {
+      title: "Bird Detected & Deterred!",
+      body: `${bird.species} •  Farm C`,
       type: "bird_seen",
       id: id ?? "",
       species: bird.species ?? "",

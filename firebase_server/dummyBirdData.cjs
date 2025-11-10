@@ -8,6 +8,7 @@ const dummyBirdData = [
     location: { lat: 12.95, lng: 77.57 },
     device: 'cam-1',
   },
+  /*
   {
     id: '2',
     species: 'House Sparrow',
@@ -63,6 +64,7 @@ const dummyBirdData = [
     location: { lat: 12.91, lng: 77.58 },
     device: 'cam-3',
   },
+  */
 ];
 
 module.exports = { dummyBirdData };

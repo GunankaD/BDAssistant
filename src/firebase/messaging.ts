@@ -164,6 +164,13 @@ export async function initFCM() {
     const token = await messaging().getToken();
     console.log('FCM token:', token);
 
+    // Subscribe to 'bird_updates' topic
+    try {
+      await messaging().subscribeToTopic('birds_updates');
+      console.log('Subscribed to topic: birds_updates');
+    } catch (e) {
+      console.warn('Topic subscribe failed', e);
+    }
     // Optionally save token to Firestore for testing / server usage
     try {
       await firestore().collection('device_tokens').doc(token).set({
