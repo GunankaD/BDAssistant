@@ -9,11 +9,11 @@ export type BirdEvent = {
 };
 
 export type Device = {
-  id: string;                 // unique device id
-  deviceName: string;        // human friendly name
-  installedLocation?: string; // e.g. "Field A - North Gate"
-  version?: string;          // firmware / software version
-  lastSynced?: string;       // ISO timestamp of last sync
+  id: string;               
+  deviceName: string;        
+  installedLocation?: string; 
+  version?: string;          
+  lastSynced?: string;       
   status?: 'online' | 'offline' | 'unknown';
   extra?: Record<string, any>;
 };

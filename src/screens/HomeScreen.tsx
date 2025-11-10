@@ -5,8 +5,6 @@ import BoxCard from '../components/BoxCard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import FloatingActionButton from '../components/FloatingActionButton';
-
-// 🧭 icons
 import { Server, History } from 'lucide-react-native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
@@ -40,7 +38,8 @@ export default function HomeScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#F8FAFC' },
+  container: { flex: 1, padding: 20, backgroundColor: '#C8D9D5' },
   header: { fontSize: 24, fontWeight: '800', marginBottom: 16, color: '#0f172a' },
   grid: { flex: 1, justifyContent: 'flex-start' },
 });
+// #F8FAFC
