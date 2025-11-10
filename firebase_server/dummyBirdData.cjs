@@ -1,6 +1,4 @@
-import type { BirdEvent } from '../types/index';
-
-export const dummyBirdData: BirdEvent[] = [
+const dummyBirdData = [
     {
     id: '1',
     species: 'Purple Swamphen',
@@ -66,3 +64,5 @@ export const dummyBirdData: BirdEvent[] = [
     device: 'cam-3',
   },
 ];
+
+module.exports = { dummyBirdData };

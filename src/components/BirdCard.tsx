@@ -27,12 +27,9 @@ export default function BirdCard({ event }: Props) {
       <View style={styles.meta}>
         <Text style={styles.species}>{event.species ?? 'Unknown'}</Text>
         <Text style={styles.line}>{event.soundName ?? '—'}</Text>
-        <Text style={styles.line}>
-          {event.timestamp ? new Date(event.timestamp).toLocaleString() : '-'}
-        </Text>
-        <Text style={styles.line}>
-          Lat: {event.location?.lat ?? '-'}, Lng: {event.location?.lng ?? '-'}
-        </Text>
+        <Text style={styles.line}>{event.timestamp ? new Date(event.timestamp).toLocaleString() : '-'}</Text>
+        <Text style={styles.line}>Lat: {event.location?.lat ?? '-'}, Lng: {event.location?.lng ?? '-'}</Text>
+        <Text style={styles.line}>{event.device ?? 'Unknown Device'}</Text>
       </View>
     </View>
   );
@@ -51,7 +48,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 4,
   },
-  thumb: { width: 76, height: 76, borderRadius: 8, backgroundColor: '#234955' },
+  thumb: { width: 100, height: 100, borderRadius: 8, backgroundColor: '#234955' },
   thumbPlaceholder: { alignItems: 'center', justifyContent: 'center' },
   thumbText: { color: '#B0BEC5', fontWeight: '700' },
   meta: { marginLeft: 12, flex: 1 },
