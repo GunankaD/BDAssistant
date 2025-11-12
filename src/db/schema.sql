@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS bird_history (
   species TEXT,
   soundName TEXT,
   timestamp INTEGER NOT NULL,      -- unix ms
-  imageURL TEXT,
+  imageUrl TEXT,
   imagePath TEXT,                  -- local cached path (nullable)
   imageCached INTEGER DEFAULT 0,   -- 0/1
   location TEXT,

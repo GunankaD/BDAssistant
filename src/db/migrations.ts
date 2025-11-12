@@ -1,7 +1,7 @@
 import type { SQLiteDatabase } from 'react-native-sqlite-storage';
 
 type Migration = {
-  id: number; // 1-based
+  id: number;
   description: string;
   up: (db: SQLiteDatabase) => Promise<void> | void;
 };
@@ -11,37 +11,49 @@ const migrations: Migration[] = [
     id: 1,
     description: 'v1 - create bird_history & meta tables + indexes',
     up: (db) => {
-      // Use a single transaction inside this migration
-      db.transaction((tx: any) => {
-        tx.executeSql(`PRAGMA foreign_keys = ON;`);
+      // Return a promise that resolves when the transaction commits
+      return new Promise<void>((resolve, reject) => {
+        try {
+          db.transaction((tx: any) => {
+            tx.executeSql(`PRAGMA foreign_keys = ON;`);
 
-        tx.executeSql(`
-          CREATE TABLE IF NOT EXISTS bird_history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            firestoreId TEXT UNIQUE,
-            species TEXT,
-            soundName TEXT,
-            timestamp INTEGER NOT NULL,
-            imageURL TEXT,
-            imagePath TEXT,
-            imageCached INTEGER DEFAULT 0,
-            location TEXT,
-            device TEXT,
-            createdAt INTEGER DEFAULT (strftime('%s','now') * 1000),
-            lastModified INTEGER DEFAULT (strftime('%s','now') * 1000)
-          );
-        `);
+            tx.executeSql(`
+              CREATE TABLE IF NOT EXISTS bird_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firestoreId TEXT UNIQUE,
+                species TEXT,
+                soundName TEXT,
+                timestamp INTEGER NOT NULL,
+                imageUrl TEXT,
+                imagePath TEXT,
+                imageCached INTEGER DEFAULT 0,
+                location TEXT,
+                device TEXT,
+                createdAt INTEGER DEFAULT (strftime('%s','now') * 1000),
+                lastModified INTEGER DEFAULT (strftime('%s','now') * 1000)
+              );
+            `);
 
-        tx.executeSql(`
-          CREATE TABLE IF NOT EXISTS meta (
-            key TEXT PRIMARY KEY,
-            value TEXT
-          );
-        `);
+            tx.executeSql(`
+              CREATE TABLE IF NOT EXISTS meta (
+                key TEXT PRIMARY KEY,
+                value TEXT
+              );
+            `);
 
-        tx.executeSql(`CREATE INDEX IF NOT EXISTS idx_bird_history_timestamp ON bird_history(timestamp DESC);`);
-        tx.executeSql(`CREATE INDEX IF NOT EXISTS idx_bird_history_firestoreId ON bird_history(firestoreId);`);
-        tx.executeSql(`CREATE INDEX IF NOT EXISTS idx_bird_history_imageCached ON bird_history(imageCached);`);
+            tx.executeSql(`CREATE INDEX IF NOT EXISTS idx_bird_history_timestamp ON bird_history(timestamp DESC);`);
+            tx.executeSql(`CREATE INDEX IF NOT EXISTS idx_bird_history_firestoreId ON bird_history(firestoreId);`);
+            tx.executeSql(`CREATE INDEX IF NOT EXISTS idx_bird_history_imageCached ON bird_history(imageCached);`);
+          }, (txErr: any) => {
+            // transaction error
+            reject(txErr);
+          }, () => {
+            // success
+            resolve();
+          });
+        } catch (err) {
+          reject(err);
+        }
       });
     }
   }
@@ -63,7 +75,6 @@ export async function getUserVersion(db: SQLiteDatabase): Promise<number> {
         }
       },
       (tx: any, _err: any) => {
-        // on error, return 0 to attempt migrations
         resolve(0);
         return false;
       }

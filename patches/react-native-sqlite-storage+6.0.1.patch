@@ -1,0 +1,36 @@
+diff --git a/node_modules/react-native-sqlite-storage/platforms/android/build.gradle b/node_modules/react-native-sqlite-storage/platforms/android/build.gradle
+index ff79b10..32b6989 100644
+--- a/node_modules/react-native-sqlite-storage/platforms/android/build.gradle
++++ b/node_modules/react-native-sqlite-storage/platforms/android/build.gradle
+@@ -1,7 +1,9 @@
+ buildscript {
+     repositories {
+         google()
+-        jcenter()
++        // jcenter()
++        mavenCentral()
++        maven { url 'https://plugins.gradle.org/m2/' }
+     }
+ 
+     dependencies {
+@@ -30,13 +32,13 @@ android {
+     }
+ }
+ 
+-repositories {
+-    mavenCentral()
+-    google()
+-    maven {
+-        url "https://maven.google.com"
+-    }
+-}
++// repositories {
++//     mavenCentral()
++//     google()
++//     maven {
++//         url "https://maven.google.com"
++//     }
++// }
+ 
+ dependencies {
+     implementation 'com.facebook.react:react-native:+'

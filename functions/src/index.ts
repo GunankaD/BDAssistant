@@ -1,4 +1,7 @@
-import {onDocumentCreated} from "firebase-functions/v2/firestore";
+import {
+  onDocumentCreated,
+  onDocumentDeleted,
+} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
@@ -38,6 +41,25 @@ export const onBirdCreated = onDocumentCreated(
       functions.logger.info("✅ FCM sent:", res);
     } catch (err) {
       functions.logger.error("❌ FCM send failed:", err);
+    }
+  }
+);
+
+export const onBirdDeleted = onDocumentDeleted(
+  {
+    document: "birds/{id}",
+    region: "asia-south1",
+  },
+  async (event) => {
+    const id = event.params.id;
+    if (!id) return;
+    try {
+      await admin.firestore().collection("birdDeletes").doc(id).set({
+        deletedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      functions.logger.info("Tombstone written for deleted bird", id);
+    } catch (err) {
+      functions.logger.error("Failed to write tombstone", err);
     }
   }
 );
