@@ -27,7 +27,7 @@ export default function HistoryScreen() {
           syncingRef.current = true;
           await syncDeletesFromTombstones().catch(err => console.warn('delete-sync failed:', err));
           if (cancelledRef.current) return; 
-          await syncFromFirestore({ forceFull: true, pageSize: 1000 }).catch(err => console.warn('syncFromFirestore failed:', err));
+          await syncFromFirestore({ forceFull: false, pageSize: 1000 }).catch(err => console.warn('syncFromFirestore failed:', err));
           if (cancelledRef.current) return; 
         }
         

@@ -56,29 +56,47 @@ export async function syncFromFirestore(options?: {
 
   console.log('[SYNC] syncFromFirestore start', { collectionName, lastSyncedIso, forceFull: options?.forceFull  });
 
+  // *) Helper to coerce a Firestore Timestamp or ISO string to ISO string
+  const toIso = (raw: any) => {
+    if (!raw) return null;
+    if (raw.toDate) return raw.toDate().toISOString();
+    if (typeof raw === 'string') return raw;
+    return new Date(raw).toISOString();
+  };
+
   // *) Helper to run paginated queryRef (queryRef must be an ascending-ordered query)
-  async function runPaginated(queryRefBuilder: (startAfterDoc?: any) => any) {
-    let lastDoc: any = null;
+   async function runPaginated(queryRefBuilder: (startAfterValue?: any) => any, useFieldValueForStartAfter: boolean) {
+    let lastDoc: any = null;             // DocumentSnapshot (for Timestamp case)
+    let lastFieldValue: any = null;      // field value (for string case)
     let totalInserted = 0;
+
     while (true) {
-      const q = lastDoc ? queryRefBuilder(lastDoc) : queryRefBuilder();
+      const q = useFieldValueForStartAfter
+        ? (lastFieldValue ? queryRefBuilder(lastFieldValue) : queryRefBuilder())
+        : (lastDoc ? queryRefBuilder(lastDoc) : queryRefBuilder());
+
       const snap = await q.get();
       if (snap.empty) break;
 
       const docs: BirdEvent[] = [];
       snap.forEach((d: any) => docs.push(docToBirdEvent(d.id, d.data())));
-      console.log('[SYNC] fetched page docs:', docs.length, 'firstTs=', docs[0]?.timestamp, 'lastTs=', docs[docs.length-1]?.timestamp);
+      console.log('[SYNC] fetched page docs:', docs.length, 'firstTs=', docs[0]?.timestamp, 'lastTs=', docs[docs.length - 1]?.timestamp);
 
       await upsertFromFirestoreBatch(docs);
-      // await syncDeletesFromTombstones();
 
       totalInserted += docs.length;
-      await setMeta(META_KEY, docs[docs.length - 1].timestamp);
+      // write meta as ISO string always
+      const lastIso = toIso(snap.docs[snap.docs.length - 1].data().timestamp);
+      await setMeta(META_KEY, lastIso);
       if (onProgress) onProgress(docs.length);
 
       if (snap.size < pageSize) break;
+
+      // prepare for next page
       lastDoc = snap.docs[snap.docs.length - 1];
+      lastFieldValue = lastDoc.data().timestamp;
     }
+
     return totalInserted;
   }
 
@@ -88,19 +106,37 @@ export async function syncFromFirestore(options?: {
       try {
         console.log('[SYNC] running incremental sync');
 
-        const lastTs = firestore.Timestamp.fromDate(new Date(lastSyncedIso));
-        const incrementalBuilder = (startAfterDoc?: any) =>
-          startAfterDoc
-            ? colRef.where('timestamp', '>', lastTs).orderBy('timestamp', 'asc').startAfter(startAfterDoc).limit(pageSize)
-            : colRef.where('timestamp', '>', lastTs).orderBy('timestamp', 'asc').limit(pageSize);
+        // detect storage type by sampling one doc (if any)
+        const sampleSnap = await colRef.orderBy('timestamp', 'asc').limit(1).get();
+        const usesTimestamp = !!sampleSnap.docs[0]?.data()?.timestamp?.toDate;
+        console.log('[SYNC] detected timestamp type =', usesTimestamp ? 'Timestamp' : 'String');
 
-        const inserted = await runPaginated(incrementalBuilder);
-        console.log(`[SYNC] incremental sync done! inserted: ${inserted} rows`)
+        if (usesTimestamp) {
+          // stored as Firestore Timestamp
+          const lastTs = firestore.Timestamp.fromDate(new Date(lastSyncedIso));
+          const incrementalBuilder = (startAfterDoc?: any) =>
+            startAfterDoc
+              ? colRef.where('timestamp', '>', lastTs).orderBy('timestamp', 'asc').startAfter(startAfterDoc).limit(pageSize)
+              : colRef.where('timestamp', '>', lastTs).orderBy('timestamp', 'asc').limit(pageSize);
 
-        return { inserted, lastSyncedAt: await getMeta(META_KEY) };
+          const inserted = await runPaginated(incrementalBuilder, /*useFieldValueForStartAfter=*/ false);
+          console.log(`[SYNC] incremental sync done! inserted: ${inserted} rows`);
+          return { inserted, lastSyncedAt: await getMeta(META_KEY) };
+        } else {
+          // stored as ISO string; compare as string (ISO8601 sorts lexicographically)
+          const lastIso = lastSyncedIso;
+          const incrementalBuilder = (startAfterValue?: any) =>
+            startAfterValue
+              ? colRef.where('timestamp', '>', lastIso).orderBy('timestamp', 'asc').startAfter(startAfterValue).limit(pageSize)
+              : colRef.where('timestamp', '>', lastIso).orderBy('timestamp', 'asc').limit(pageSize);
+
+          const inserted = await runPaginated(incrementalBuilder, /*useFieldValueForStartAfter=*/ true);
+          console.log(`[SYNC] incremental sync done! inserted: ${inserted} rows`);
+          return { inserted, lastSyncedAt: await getMeta(META_KEY) };
+        }
       } catch (err) {
         console.warn('Incremental query failed, falling back to safe approach:', err);
-        // fall through to fallback
+        // fall through to fallback (full sync) below
       }
     }
 
@@ -114,7 +150,7 @@ export async function syncFromFirestore(options?: {
             ? colRef.orderBy('timestamp', 'asc').startAfter(startAfterDoc).limit(pageSize)
             : colRef.orderBy('timestamp', 'asc').limit(pageSize);
 
-        const inserted = await runPaginated(fullBuilder);
+        const inserted = await runPaginated(fullBuilder, false);
         console.log(`[SYNC] fullfetch sync done! inserted: ${inserted} rows`);
 
         return { inserted, lastSyncedAt: await getMeta(META_KEY) };
