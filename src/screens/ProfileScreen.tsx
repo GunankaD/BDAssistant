@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LanguagePicker from '../components/LanguagePicker';
+import { useLanguage } from '../context/LanguageContext';
+import TranslatedText from '../components/TranslatedText';
 
 export default function ProfileScreen() {
+  const { lang, options } = useLanguage();
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  const currentLabel = options.find((o) => o.code === lang)?.label ?? lang;
+
+  const memberSinceDate = 'Jan 1, 2025';
+  const lastActiveDate = 'Nov 7, 2025'; // left labels translated, right stays English
+
   return (
     <SafeAreaView style={styles.page}>
-
       <View style={styles.avatarWrap}>
         <Text style={styles.avatar}>👤</Text>
       </View>
@@ -16,41 +26,52 @@ export default function ProfileScreen() {
 
         <View style={styles.badgesRow}>
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>Farm Manager</Text>
+            <TranslatedText text="Farm Manager" style={styles.badgeText} />
           </View>
           <View style={styles.badgeOutline}>
-            <Text style={styles.badgeOutlineText}>Member since Jan 1, 2025</Text>
+            {/* translate "Member since {{date}}" but keep date English via placeholder */}
+            <TranslatedText text="Member since {{date}}" values={{ date: memberSinceDate }} style={styles.badgeOutlineText} />
           </View>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Account details</Text>
+          <Text style={styles.cardTitle}>
+            <TranslatedText text="Account details" />
+          </Text>
 
           <View style={styles.row}>
-            <Text style={styles.label}>Devices linked</Text>
+            <TranslatedText text="Devices linked" style={styles.label} />
             <Text style={styles.value}>2</Text>
           </View>
 
           <View style={styles.row}>
-            <Text style={styles.label}>Last active</Text>
-            <Text style={styles.value}>Nov 7, 2025</Text>
+            <TranslatedText text="Last active" style={styles.label} />
+            <Text style={styles.value}>{lastActiveDate}</Text>
           </View>
 
           <View style={styles.row}>
-            <Text style={styles.label}>Preferred location</Text>
+            <TranslatedText text="Preferred location" style={styles.label} />
             <Text style={styles.value}>Farm A — North Gate</Text>
           </View>
 
           <View style={styles.row}>
-            <Text style={styles.label}>Plan</Text>
+            <TranslatedText text="Plan" style={styles.label} />
             <Text style={styles.value}>Gold</Text>
           </View>
+
+          {/* New language row (tappable) */}
+          <TouchableOpacity style={styles.row} onPress={() => setPickerOpen(true)}>
+            <TranslatedText text="Language" style={styles.label} />
+            <Text style={[styles.value, { color: '#B0BEC5' }]}>{currentLabel}</Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.editBtn} onPress={() => { /* TODO: edit profile */ }}>
           <Text style={styles.editText}>Edit profile</Text>
         </TouchableOpacity>
       </View>
+
+      <LanguagePicker visible={pickerOpen} onClose={() => setPickerOpen(false)} />
     </SafeAreaView>
   );
 }

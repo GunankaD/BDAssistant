@@ -2,12 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Camera } from 'lucide-react-native';
 import type { Device } from '../types';
+import TranslatedText from './TranslatedText';
 
 type Props = {
   device: Device;
 };
 
 export default function DeviceCard({ device }: Props) {
+  const statusText = device.status ?? 'unknown';
+
   return (
     <View style={styles.item}>
       {/* Icon block on the left */}
@@ -15,23 +18,51 @@ export default function DeviceCard({ device }: Props) {
         <Camera size={36} color="#B0BEC5" />
       </View>
 
-      {/* Text info on the right */}
+      {/* Text info */}
       <View style={styles.meta}>
         <View style={styles.row}>
           <Text style={styles.name}>{device.deviceName}</Text>
-          <Text style={[styles.status, device.status === 'online' ? styles.online : styles.offline]}>
-            {device.status ?? 'unknown'}
+
+          {/* translated status */}
+          <Text
+            style={[
+              styles.status,
+              device.status === 'online' ? styles.online : styles.offline,
+            ]}
+          >
+            <TranslatedText text={statusText} />
           </Text>
         </View>
 
-        <Text style={styles.line}>ID: {device.id}</Text>
+        {/* ID */}
+        <Text style={styles.line}>
+          <TranslatedText text="ID: {{id}}" values={{ id: device.id }} />
+        </Text>
+
+        {/* Location */}
         {device.installedLocation && (
-          <Text style={styles.line}>Location: {device.installedLocation}</Text>
+          <Text style={styles.line}>
+            <TranslatedText
+              text="Location: {{loc}}"
+              values={{ loc: device.installedLocation }}
+            />
+          </Text>
         )}
-        {device.version && <Text style={styles.line}>Version: {device.version}</Text>}
+
+        {/* Version */}
+        {device.version && (
+          <Text style={styles.line}>
+            <TranslatedText text="Version: {{ver}}" values={{ ver: device.version }} />
+          </Text>
+        )}
+
+        {/* Last synced */}
         {device.lastSynced && (
           <Text style={styles.line}>
-            Last synced: {new Date(device.lastSynced).toLocaleString()}
+            <TranslatedText
+              text="Last synced: {{time}}"
+              values={{ time: new Date(device.lastSynced).toLocaleString() }}
+            />
           </Text>
         )}
       </View>

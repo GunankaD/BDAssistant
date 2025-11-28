@@ -6,8 +6,12 @@ import { initFCM } from './firebase/messaging';
 import { bootstrapApp } from './AppInit';
 import useSyncOnResume from './hooks/useSyncOnResume';
 import { printLocalDB } from './dev/printLocalDB';
+import { LanguageProvider } from './context/LanguageContext';
+// import Translator from './i18n/translator';
 
 export default function App() {
+  // Translator.setApiConfig({ provider: 'libre', url: 'https://libretranslate.de/translate' });
+
   // 1) local database
   useEffect(() => { bootstrapApp(); }, []);
 
@@ -18,10 +22,12 @@ export default function App() {
   useEffect(() => { initFCM(); }, []);
 
   return (
-    <SafeAreaProvider>
-        <NavigationContainer>
-            <AppNavigator />
-        </NavigationContainer>
-    </SafeAreaProvider>
+    <LanguageProvider>
+      <SafeAreaProvider>
+          <NavigationContainer>
+              <AppNavigator />
+          </NavigationContainer>
+      </SafeAreaProvider>
+    </LanguageProvider>
   );
 }

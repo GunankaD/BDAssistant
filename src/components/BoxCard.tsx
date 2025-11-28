@@ -1,16 +1,28 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, GestureResponderEvent } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
+import TranslatedText from './TranslatedText';
 
 type Props = {
-  title: string;
-  subtitle?: string;
+  title: string | React.ReactNode;
+  subtitle?: string | React.ReactNode;
   onPress?: (e: GestureResponderEvent) => void;
   testID?: string;
   icon?: LucideIcon;
 };
 
 export default function BoxCard({ title, subtitle, onPress, testID, icon: Icon }: Props) {
+  const renderTitle = () => {
+    if (typeof title === 'string') return <TranslatedText text={title} style={styles.title} />;
+    return <>{title}</>;
+  };
+
+  const renderSubtitle = () => {
+    if (!subtitle) return null;
+    if (typeof subtitle === 'string') return <TranslatedText text={subtitle} style={styles.subtitle} />;
+    return <>{subtitle}</>;
+  };
+
   return (
     <TouchableOpacity activeOpacity={0.86} onPress={onPress} testID={testID}>
       <View style={styles.card}>
@@ -20,8 +32,8 @@ export default function BoxCard({ title, subtitle, onPress, testID, icon: Icon }
           </View>
         )}
         <View style={{ flex: 1 }}>
-          <Text style={styles.title}>{title}</Text>
-          {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+          {renderTitle()}
+          {renderSubtitle()}
         </View>
       </View>
     </TouchableOpacity>
