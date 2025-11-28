@@ -1,13 +1,13 @@
 const dummyBirdData = [
-    {
-    id: '1',
-    species: 'Purple Swamphen',
-    soundName: 'scare_crow.wav',
-    timestamp: new Date().toISOString(),
-    imageUrl: 'https://photos.smugmug.com/Birds-Water/Purple-Swamphen/i-jdQrxrX/3/Lt9dQnGGPkMHj2VT3tS8cBBdDHPNdGB5QFXT9jRWh/XL/Calamon-02-XL.jpg',
-    location: { lat: 12.95, lng: 77.57 },
-    device: 'cam-1',
-  },
+  //   {
+  //   id: '1',
+  //   species: 'Purple Swamphen',
+  //   soundName: 'scare_crow.wav',
+  //   timestamp: new Date().toISOString(),
+  //   imageUrl: 'https://photos.smugmug.com/Birds-Water/Purple-Swamphen/i-jdQrxrX/3/Lt9dQnGGPkMHj2VT3tS8cBBdDHPNdGB5QFXT9jRWh/XL/Calamon-02-XL.jpg',
+  //   location: { lat: 12.95, lng: 77.57 },
+  //   device: 'cam-1',
+  // },
   // {
   //   id: '2',
   //   species: 'House Sparrow',
@@ -54,15 +54,15 @@ const dummyBirdData = [
   //   location: { lat: 12.99, lng: 77.61 },
   //   device: 'cam-2',
   // },
-  // {
-  //   id: '7',
-  //   species: 'Indian Pond Heron',
-  //   soundName: 'pond_heron_call.wav',
-  //   timestamp: new Date().toISOString(),
-  //   imageUrl: 'https://i0.wp.com/singaporebirds.com/wp-content/uploads/2016/01/indian-pond-heron-fy7d2479-102eos7d-150418.jpg?fit=1200%2C800&ssl=1',
-  //   location: { lat: 12.91, lng: 77.58 },
-  //   device: 'cam-3',
-  // },
+  {
+    id: '7',
+    species: 'Indian Pond Heron',
+    soundName: 'pond_heron_call.wav',
+    timestamp: new Date().toISOString(),
+    imageUrl: 'https://i0.wp.com/singaporebirds.com/wp-content/uploads/2016/01/indian-pond-heron-fy7d2479-102eos7d-150418.jpg?fit=1200%2C800&ssl=1',
+    location: { lat: 12.91, lng: 77.58 },
+    device: 'cam-3',
+  },
 ];
 
 module.exports = { dummyBirdData };

@@ -3,6 +3,9 @@ import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messag
 import firestore from '@react-native-firebase/firestore';
 import notifee, { AndroidImportance, EventType } from '@notifee/react-native';
 
+let fcmInitialized = false;
+const displayedMessageIds = new Set<string>(); // prevent duplicate displays in same app session
+
 // Helper: guarantee a string or undefined, required to satisfy ts
 function safeString(value: unknown): string | undefined {
   if (value == null) return undefined;
@@ -131,6 +134,12 @@ notifee.onForegroundEvent(({ type, detail }) => {
 
 // initFCM: runs only when the app is opened, call from your App root (e.g., App.tsx useEffect),
 export async function initFCM() {
+  if (fcmInitialized) {
+    console.log('initFCM: already initialized - skipping');
+    return;
+  }
+  fcmInitialized = true;
+
   try {
     // Android 13+ needs POST_NOTIFICATIONS runtime permission
     if (Platform.OS === 'android' && Platform.Version >= 33) {
@@ -164,23 +173,26 @@ export async function initFCM() {
     const token = await messaging().getToken();
     console.log('FCM token:', token);
 
-    // Subscribe to 'bird_updates' topic
+    // Subscribe to 'birds_updates' topic
     try {
       await messaging().subscribeToTopic('birds_updates');
       console.log('Subscribed to topic: birds_updates');
     } catch (e) {
       console.warn('Topic subscribe failed', e);
     }
+
     // Optionally save token to Firestore for testing / server usage
-    try {
-      await firestore().collection('device_tokens').doc(token).set({
-        token,
-        platform: Platform.OS,
-        createdAt: firestore.FieldValue.serverTimestamp(),
-      });
-      console.log('Saved token to Firestore');
-    } catch (dbErr) {
-      console.warn('Could not save token to Firestore (ok if firestore not installed):', dbErr);
+    if (token) {
+      try {
+        await firestore().collection('device_tokens').doc(token).set({
+          token,
+          platform: Platform.OS,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        });
+        console.log('Saved token to Firestore');
+      } catch (dbErr) {
+        console.warn('Could not save token to Firestore (ok if firestore not installed):', dbErr);
+      }
     }
 
     // Handle token refresh
@@ -197,9 +209,28 @@ export async function initFCM() {
       }
     });
 
-    // Foreground messages: show local notification
+    // Foreground messages: show local notification (deduped)
     messaging().onMessage(async remoteMessage => {
       try {
+        // build a stable message id for dedupe
+        const mid =
+          remoteMessage?.messageId ??
+          `${safeString(remoteMessage?.data?.id) ?? ''}-${safeString(remoteMessage?.sentTime) ?? ''}`;
+
+        if (mid) {
+          if (displayedMessageIds.has(mid)) {
+            console.log('onMessage: duplicate ignored for messageId', mid);
+            return;
+          }
+          displayedMessageIds.add(mid);
+          // keep the set bounded
+          if (displayedMessageIds.size > 500) {
+            // simple strategy: clear when it grows too big
+            displayedMessageIds.clear();
+            console.log('displayedMessageIds cleared (bounded).');
+          }
+        }
+
         console.log('Foreground message:', remoteMessage);
 
         const title =
@@ -233,7 +264,6 @@ export async function initFCM() {
           android: androidOptionsFg,
           data: { payload: safeString(remoteMessage?.data) ?? '' },
         });
-
       } catch (e) {
         console.warn('onMessage display error', e);
       }
